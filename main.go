@@ -24,8 +24,14 @@ func main() {
 	cacheRds := db.ProviderCacheRedis(ctx)
 
 	server := api.NewServer(conn, tokenAuth, cacheRds)
-	serverErr := server.Start(ctx)
-	if serverErr != nil {
-		log.Fatal("cannot start server :", serverErr)
+	serverStartErr := server.Start(ctx)
+	if serverStartErr != nil {
+		log.Fatal("cannot start server :", serverStartErr)
 	}
+
+	serverStopErr := server.Stop(ctx)
+	if serverStopErr != nil {
+		log.Fatal("stop server :", serverStopErr)
+	}
+
 }
