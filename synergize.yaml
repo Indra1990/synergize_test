@@ -1,0 +1,26 @@
+# port address
+listen_address: "0.0.0.0:8080"
+
+# pgsql database config
+database:
+  pgsql:
+    host: localhost 
+    port: "5432"
+    user: postgres
+    password: postgres
+    database: transactions
+
+cache:
+  redis:
+    host: localhost
+    port: 6379
+    password: dmcIx7UqF5
+    database: 0
+
+jwt:
+  jwtKey: 9cEhqueajj
+
+redis:
+  expired: 120
+
+
