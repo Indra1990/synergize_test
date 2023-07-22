@@ -62,7 +62,7 @@ func (u *UserHttpRouterRegistry) UserList(w http.ResponseWriter, r *http.Request
 		AccountBankName: r.URL.Query().Get("accountBankName"),
 		BalanceStart:    balanceStart,
 		BalanceEnd:      balanceEnd,
-		RegisterAt:      r.URL.Query().Get("registerAt"),
+		RegisterAt:      registerAtParam,
 	}
 
 	userList, userListErr := u.serviceUser.UserList(param)
@@ -99,6 +99,7 @@ func (u *UserHttpRouterRegistry) UserDetail(w http.ResponseWriter, r *http.Reque
 	result := map[string]interface{}{
 		"result": userDetail,
 	}
+
 	render.Status(r, http.StatusOK)
 	render.JSON(w, r, result)
 }
