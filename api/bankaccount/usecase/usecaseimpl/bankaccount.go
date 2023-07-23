@@ -1,6 +1,7 @@
 package usecaseimpl
 
 import (
+	"strings"
 	"synergize/api/bankaccount/repository"
 	"synergize/api/bankaccount/usecase"
 	"synergize/entity"
@@ -22,7 +23,7 @@ func (b *BankAccountService) Create(cmd usecase.BankAccountRequest) (err error) 
 	ent := entity.BankAccount{
 		UserId:            cmd.UserId,
 		AccountName:       cmd.AccountName,
-		BankName:          cmd.BankName,
+		BankName:          strings.ToUpper(cmd.BankName),
 		AccountBankNumber: cmd.AccountBankNumber,
 	}
 
@@ -68,7 +69,7 @@ func (b *BankAccountService) Update(cmd usecase.BankAccountRequestUpdate) (err e
 	ent := entity.BankAccount{
 		ID:                bankAccount.ID,
 		UserId:            cmd.UserId,
-		BankName:          bankAccount.BankName,
+		BankName:          strings.ToUpper(cmd.BankName),
 		AccountName:       bankAccount.AccountName,
 		AccountBankNumber: cmd.AccountBankNumber,
 	}

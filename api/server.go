@@ -49,7 +49,6 @@ func NewServer(db *gorm.DB, tokenAuth *jwtauth.JWTAuth, cacheRds *redis.Client) 
 					ba.Post("/create", deliveryBankAccount(db).Create)
 					ba.Get("/{id}", deliveryBankAccount(db).FindbyId)
 					ba.Put("/{id}", deliveryBankAccount(db).Update)
-
 				})
 				// transaction
 				auth.Route("/transaction", func(trf chi.Router) {

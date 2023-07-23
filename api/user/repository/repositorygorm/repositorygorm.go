@@ -3,6 +3,7 @@ package repositorygorm
 import (
 	"errors"
 	"fmt"
+	"strings"
 	usecaseuser "synergize/api/user/usecase"
 	"synergize/entity"
 
@@ -52,7 +53,7 @@ func (r *RepositoryGormUser) UserList(cmd usecaseuser.UserQueryParam) (ent []*en
 	}
 
 	if cmd.AccountBankName != "" {
-		query.Where("bank_accounts.bank_name = ?", cmd.AccountBankName)
+		query.Where("bank_accounts.bank_name = ?", strings.ToUpper(cmd.AccountBankName))
 	}
 
 	if cmd.BalanceStart > 0 {
@@ -77,29 +78,19 @@ func (r *RepositoryGormUser) UserList(cmd usecaseuser.UserQueryParam) (ent []*en
 		return
 	}
 
-	if query.RowsAffected == 0 {
-		err = nil
-		return
-	}
-
 	return
 }
 
 func (r *RepositoryGormUser) UserDetail(userId uint) (ent *entity.User, err error) {
 	query := r.db.Preload("BankAccount").Preload("Balance").Find(&ent, userId)
 
-	if errors.Is(query.Error, gorm.ErrRecordNotFound) {
-		err = query.Error
+	if errors.Is(query.Error, gorm.ErrRecordNotFound) || query.RowsAffected == 0 {
+		err = gorm.ErrRecordNotFound
 		return
 	}
 
 	if query.Error != nil {
 		err = query.Error
-		return
-	}
-
-	if query.RowsAffected == 0 {
-		err = gorm.ErrRecordNotFound
 		return
 	}
 

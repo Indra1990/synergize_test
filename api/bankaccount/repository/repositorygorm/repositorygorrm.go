@@ -25,18 +25,13 @@ func (b *BankAccountRepository) Create(ent *entity.BankAccount) (err error) {
 func (b *BankAccountRepository) FindbyId(bankAccountId int) (ent *entity.BankAccount, err error) {
 	query := b.db.Preload("User").Find(&ent, bankAccountId)
 
-	if errors.Is(query.Error, gorm.ErrRecordNotFound) {
-		err = query.Error
+	if errors.Is(query.Error, gorm.ErrRecordNotFound) || query.RowsAffected == 0 {
+		err = gorm.ErrRecordNotFound
 		return
 	}
 
 	if query.Error != nil {
 		err = query.Error
-		return
-	}
-
-	if query.RowsAffected == 0 {
-		err = gorm.ErrRecordNotFound
 		return
 	}
 
