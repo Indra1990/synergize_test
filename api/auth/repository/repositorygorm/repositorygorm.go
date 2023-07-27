@@ -18,22 +18,27 @@ func NewRepositoryGorm(db *gorm.DB) *RepositoryGorm {
 }
 
 func (r *RepositoryGorm) CreateUser(ent *entity.User) (err error) {
-	if err = r.db.Create(&ent).Error; err != nil {
+
+	query := r.db.Create(&ent)
+	if query.Error != nil {
+		err = query.Error
 		return
 	}
 
-	err = r.db.Transaction(func(tx *gorm.DB) (err error) {
-		balance := entity.Balance{
-			Amount: 0,
-			UserId: ent.ID,
-		}
+	if query.RowsAffected > 0 {
+		err = r.db.Transaction(func(tx *gorm.DB) (err error) {
+			balance := entity.Balance{
+				Amount: 0,
+				UserId: ent.ID,
+			}
 
-		if err = tx.Create(&balance).Error; err != nil {
+			if err = tx.Create(&balance).Error; err != nil {
+				return
+			}
+
 			return
-		}
-
-		return
-	})
+		})
+	}
 
 	return
 }

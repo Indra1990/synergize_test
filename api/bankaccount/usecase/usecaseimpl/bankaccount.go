@@ -20,6 +20,10 @@ func (b *BankAccountService) Create(cmd usecase.BankAccountRequest) (err error) 
 		return
 	}
 
+	if err = b.repo.CheckUserIdExist(cmd.UserId); err != nil {
+		return
+	}
+
 	ent := entity.BankAccount{
 		UserId:            cmd.UserId,
 		AccountName:       cmd.AccountName,

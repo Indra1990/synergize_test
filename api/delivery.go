@@ -39,8 +39,9 @@ func deliveryBankAccount(db *gorm.DB) *bankaccount.BankAccountHttpRouterRegistry
 }
 
 func deliveryTransaction(db *gorm.DB) *transactionservice.TransactionHttpRouterRegistry {
+	bankAccountGorm := repositorybankaccount.NewBankAccountRepository(db)
 	transactionGorm := repositorytransaction.NewRepositoryGormTransaction(db)
-	transactionImpl := usecaseimpltransaction.NewTransactionService(transactionGorm)
+	transactionImpl := usecaseimpltransaction.NewTransactionService(transactionGorm, bankAccountGorm)
 	transactionAccountRoute := transactionservice.NewTransactionHttpRouterRegistry(transactionImpl)
 	return transactionAccountRoute
 }
