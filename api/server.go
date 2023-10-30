@@ -5,10 +5,12 @@ import (
 	"fmt"
 	"net/http"
 	"sync"
+	"synergize/utils"
 	"time"
 
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
+	"github.com/go-chi/httplog/v2"
 	"github.com/go-chi/jwtauth/v5"
 	"github.com/go-redis/redis/v8"
 	"github.com/spf13/viper"
@@ -22,11 +24,13 @@ type Server struct {
 	cacheRds  *redis.Client
 }
 
-func NewServer(db *gorm.DB, tokenAuth *jwtauth.JWTAuth, cacheRds *redis.Client) *Server {
+func NewServer(db *gorm.DB, tokenAuth *jwtauth.JWTAuth, cacheRds *redis.Client) *Server { 
+
 	router := chi.NewRouter()
 	router.Use(middleware.Logger)
 	router.Use(middleware.RealIP)
 	router.Use(middleware.Recoverer)
+	router.Use(httplog.RequestLogger(utils.LoggerChi()))
 
 	router.Get("/", func(w http.ResponseWriter, r *http.Request) {
 		w.Write([]byte("welcome"))

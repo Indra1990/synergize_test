@@ -18,9 +18,7 @@ func NewAuthHttpRouterRegistry(authService usecase.AuthService) *AuthHttpRouterR
 }
 
 func (a *AuthHttpRouterRegistry) Register(w http.ResponseWriter, r *http.Request) {
-
 	cmd := usecase.RegisterRequest{}
-
 	if decodeErr := render.DecodeJSON(r.Body, &cmd); decodeErr != nil {
 		render.Status(r, http.StatusBadRequest)
 		render.JSON(w, r, decodeErr.Error())
